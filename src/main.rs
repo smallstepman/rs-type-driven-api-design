@@ -2,15 +2,15 @@ use std::{collections::HashSet, thread::sleep, time::Duration};
 
 const CLEAR: &str = "\x1B[2J\x1B[1;1H";
 
-fn progess<T, Iter>(iter: Iter, f: fn(&T) -> ())
+fn progess<Iter>(iter: Iter, f: fn(Iter::Item) -> ())
 where
-    Iter: Iterator<Item = T>,
+    Iter: Iterator,
 {
     let mut i = 0;
     for n in iter {
         println!("{}{}", CLEAR, "*".repeat(i));
         i += 1;
-        f(&n);
+        f(n);
     }
 }
 
