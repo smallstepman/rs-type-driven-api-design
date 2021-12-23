@@ -1,4 +1,4 @@
-use std::{collections::HashSet, thread::sleep, time::Duration};
+use std::{thread::sleep, time::Duration};
 
 const CLEAR: &str = "\x1B[2J\x1B[1;1H";
 
@@ -31,12 +31,6 @@ fn expensive_calculation<T>(_n: &T) {
 
 fn main() {
     let v = vec![1, 2, 3];
-    progess(v.iter(), expensive_calculation);
-
-    let mut h = HashSet::new();
-    h.insert(0);
-    h.insert(2);
-    progess(h.iter(), expensive_calculation);
     for n in Progress::new(v.iter()) {
         expensive_calculation(n);
     }
