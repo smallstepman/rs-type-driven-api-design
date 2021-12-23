@@ -1,13 +1,16 @@
-use std::{thread::sleep, time::Duration};
+use std::{collections::HashSet, thread::sleep, time::Duration};
 
 const CLEAR: &str = "\x1B[2J\x1B[1;1H";
 
-fn progess<T>(v: Vec<T>) {
+fn progess<T, Iter>(iter: Iter, f: fn(&T) -> ())
+where
+    Iter: Iterator<Item = T>,
+{
     let mut i = 0;
-    for n in v.iter() {
+    for n in iter {
         println!("{}{}", CLEAR, "*".repeat(i));
         i += 1;
-        expensive_calculation(n);
+        f(&n);
     }
 }
 
@@ -17,5 +20,10 @@ fn expensive_calculation<T>(_n: &T) {
 
 fn main() {
     let v = vec![1, 2, 3];
-    progess(v)
+    progess(v.iter(), expensive_calculation);
+
+    let mut h = HashSet::new();
+    h.insert(0);
+    h.insert(2);
+    progess(h.iter(), expensive_calculation);
 }
