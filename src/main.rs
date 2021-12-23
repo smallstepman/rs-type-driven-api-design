@@ -59,9 +59,9 @@ fn expensive_calculation<T>(_n: &T) {
 }
 
 fn main() {
-    for n in (0..).progress() {
-        expensive_calculation(&n);
-    }
+    // for n in (0..).progress() {
+    //     expensive_calculation(&n);
+    // }
 
     let v = vec![1, 2, 3];
     for n in v.iter().progress().with_bound() {
