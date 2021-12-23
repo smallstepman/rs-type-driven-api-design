@@ -2,15 +2,26 @@ use std::{collections::HashSet, thread::sleep, time::Duration};
 
 const CLEAR: &str = "\x1B[2J\x1B[1;1H";
 
-fn progess<Iter>(iter: Iter, f: fn(Iter::Item) -> ())
+struct Progress<Iter> {
+    iter: Iter,
+    i: usize,
+}
+
+impl<Iter> Progress<Iter> {
+    pub fn new(iter: Iter) -> Self {
+        Progress { iter, i: 0 }
+    }
+}
+
+impl<Iter> Iterator for Progress<Iter>
 where
     Iter: Iterator,
 {
-    let mut i = 0;
-    for n in iter {
-        println!("{}{}", CLEAR, "*".repeat(i));
-        i += 1;
-        f(n);
+    type Item = Iter::Item;
+    fn next(&mut self) -> Option<Self::Item> {
+        println!("{}{}", CLEAR, "*".repeat(self.i));
+        self.i += 1;
+        self.iter.next()
     }
 }
 
@@ -26,4 +37,7 @@ fn main() {
     h.insert(0);
     h.insert(2);
     progess(h.iter(), expensive_calculation);
+    for n in Progress::new(v.iter()) {
+        expensive_calculation(n);
+    }
 }
