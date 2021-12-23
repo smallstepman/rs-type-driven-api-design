@@ -6,6 +6,7 @@ struct Progress<Iter> {
     iter: Iter,
     i: usize,
     bound: Option<usize>,
+    delims: (char, char),
 }
 
 impl<Iter> Progress<Iter> {
@@ -14,6 +15,7 @@ impl<Iter> Progress<Iter> {
             iter,
             i: 0,
             bound: None,
+            delims: ('[', ']'),
         }
     }
 }
@@ -28,6 +30,12 @@ where
     }
 }
 
+impl<Iter> Progress<Iter> {
+    pub fn with_delims(mut self, delims: (char, char)) -> Self {
+        self.delims = delims;
+        self
+    }
+}
 impl<Iter> Iterator for Progress<Iter>
 where
     Iter: Iterator,
@@ -36,7 +44,13 @@ where
     fn next(&mut self) -> Option<Self::Item> {
         println!("{}", CLEAR);
         match self.bound {
-            Some(bound) => println!("[{}{}]", "*".repeat(self.i), " ".repeat(bound - self.i)),
+            Some(bound) => println!(
+                "{}{}{}{}",
+                self.delims.0,
+                "*".repeat(self.i),
+                " ".repeat(bound - self.i),
+                self.delims.1
+            ),
             None => println!("{}", "*".repeat(self.i)),
         }
         self.i += 1;
@@ -63,8 +77,9 @@ fn main() {
     //     expensive_calculation(&n);
     // }
 
+    let brkts = ('<', '>');
     let v = vec![1, 2, 3];
-    for n in v.iter().progress().with_bound() {
+    for n in v.iter().progress().with_bound().with_delims(brkts) {
         expensive_calculation(n);
     }
 }
