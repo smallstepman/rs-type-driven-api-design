@@ -2,7 +2,7 @@ use std::{thread::sleep, time::Duration};
 
 const CLEAR: &str = "\x1B[2J\x1B[1;1H";
 
-fn progess(v: Vec<i32>) {
+fn progess<T>(v: Vec<T>) {
     let mut i = 0;
     for n in v.iter() {
         println!("{}{}", CLEAR, "*".repeat(i));
@@ -11,7 +11,7 @@ fn progess(v: Vec<i32>) {
     }
 }
 
-fn expensive_calculation(_n: &i32) {
+fn expensive_calculation<T>(_n: &T) {
     sleep(Duration::from_secs(1));
 }
 
